@@ -1,10 +1,15 @@
 import { database } from "@/appwrite/appwrite.config"
+import { ID } from "appwrite"
 
+
+const DB_ID = "notes_app"
+const COL_ID = "notes"
+const _ID = ID.unique()
 
 export async function getNotes(): Promise<Note[]> {
     const res = await database.listDocuments(
-        "notes_app",
-         "notes"
+        DB_ID,
+        COL_ID
         )    
     
     const notes: Note[] = res.documents.map(note => ({
@@ -12,6 +17,24 @@ export async function getNotes(): Promise<Note[]> {
         $createdAt: note.$createdAt,
         content: note.content
     }))
-    
+
     return notes
+}
+
+export async function createNote(content: string): Promise<Note>{
+    const newNote = {content: content}
+    const res = await database.createDocument(
+        DB_ID,
+        COL_ID,
+        _ID,
+        newNote
+    )
+
+    const note:Note = {
+        $id: res.$id,
+        $createdAt: res.$createdAt,
+        content: res.content
+    }
+
+    return note
 }
