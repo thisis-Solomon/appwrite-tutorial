@@ -38,3 +38,11 @@ export async function createNote(content: string): Promise<Note>{
 
     return note
 }
+
+export async function deleteNote(noteId: string){
+    await database.deleteDocument(
+        DB_ID,
+        COL_ID,
+        noteId
+    )
+}
